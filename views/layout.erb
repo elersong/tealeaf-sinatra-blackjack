@@ -5,16 +5,23 @@
     <link rel="stylesheet" href="/vendor/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="/application.css">
   </head>
-  
-  <body>
-    
-    <div class="container">
-      <%if @error %>
-        <div class="alert alert-error"><%= @error %></div>
-      <% end %>
-        <%= yield %>
+  <body style="padding-top: 50px;">
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+            <ul class="nav">
+              <li><a href="/">Nav Item</a></li>
+            </ul>
+        </div>
+      </div>
     </div>
-    
+
+  <div class="container">
+    <%if @error %>
+      <div class="alert alert-error"><%=@error%></div>
+    <% end %>
+      <%= yield %>
+  </div>
   </body>
-  
 </html>
