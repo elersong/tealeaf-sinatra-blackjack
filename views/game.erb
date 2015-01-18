@@ -1,0 +1,17 @@
+<h1>Blackjack</h1>
+
+<p>Welcome, <%= session[:player_name] %>!</p>
+
+<p>Dealer Cards</p>
+<ul>
+  <% session[:dealer_cards].each do |card| %>
+    <li><%= card.to_s %></li>
+  <% end %>
+</ul>
+
+<p>Player Cards</p>
+<ul>
+  <% session[:player_cards].each do |card| %>
+    <li><%= card.to_s %></li>
+  <% end %>
+</ul>
