@@ -1,0 +1,9 @@
+ul.card-background {
+  background-color: #eee;
+  padding: 15px;
+  border-radius: 10px;
+}
+
+p {
+  color: green;
+}

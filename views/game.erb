@@ -1,17 +1,24 @@
 <h1>Blackjack</h1>
 
 <p>Welcome, <%= session[:player_name] %>!</p>
+<div class="row">
+  <p>Dealer Cards (<%= session[:dealer_total] %>)</p>
+  <ul class="card-background">
+    <% session[:dealer_cards].each do |card| %>
+      <img src="images/cards/<%= card_to_image(card) %>">
+    <% end %>
+  </ul>
+  
+  <p>Player Cards (<%= session[:player_total] %>)</p>
+  <ul>
+    <% session[:player_cards].each do |card| %>
+      <img src="images/cards/<%= card_to_image(card) %>">
+    <% end %>
+  </ul>
+</div>
 
-<p>Dealer Cards</p>
-<ul>
-  <% session[:dealer_cards].each do |card| %>
-    <li><%= card.to_s %></li>
-  <% end %>
-</ul>
-
-<p>Player Cards</p>
-<ul>
-  <% session[:player_cards].each do |card| %>
-    <li><%= card.to_s %></li>
-  <% end %>
-</ul>
+<% unless @dealer_turn %>
+  <form action="/player_turn" method="post">
+    <input type="submit" class="btn btn-success" value="Hit">
+  </form>
+<% end %>
