@@ -10,7 +10,7 @@
   </ul>
   
   <p>Player Cards (<%= session[:player_total] %>)</p>
-  <ul>
+  <ul class="card-background">
     <% session[:player_cards].each do |card| %>
       <img src="images/cards/<%= card_to_image(card) %>">
     <% end %>

@@ -1,9 +1,18 @@
 ul.card-background {
-  background-color: #eee;
+  background-color: #ddd;
   padding: 15px;
   border-radius: 10px;
 }
 
+ul.card-background img {
+  margin-right: 5px ;
+  border: solid 2px #a8a8a8;
+}
+
 p {
-  color: green;
+  color: #888;
+}
+
+.row p {
+  margin-left: 20px;
 }
