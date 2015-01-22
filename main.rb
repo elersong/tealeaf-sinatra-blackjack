@@ -111,3 +111,13 @@ get '/game' do
   # render template
   erb :game
 end
+
+# player chooses hit
+post '/game/player/hit' do
+  session[:player_cards] << session[:deck].pop
+  erb :game
+end
+
+post '/game/player/stay' do
+  
+end

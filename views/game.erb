@@ -17,8 +17,10 @@
   </ul>
 </div>
 
-<% unless @dealer_turn %>
-  <form action="/player_turn" method="post">
-    <input type="submit" class="btn btn-success" value="Hit">
-  </form>
-<% end %>
+<form action='game/player/hit' method='post'>
+  <input type="submit" class="btn btn-success" value="Hit">
+</form>
+
+<form action='game/player/stay' method='post'>
+  <input type="submit" class="btn btn-danger" value="Stay">
+</form>
