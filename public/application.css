@@ -5,6 +5,7 @@ ul.card-background {
 }
 
 ul.card-background img {
+  margin-top: 5px;
   margin-right: 5px ;
   border: solid 2px #a8a8a8;
 }

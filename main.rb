@@ -69,6 +69,10 @@ helpers do
   
 end
 
+before do
+  @show_gameplay_buttons = false
+end
+
 # ============================================================================== Route Definitions & Game Logic
 
 get '/' do
@@ -108,16 +112,24 @@ get '/game' do
   session[:player_total] = calculate_total(session[:player_cards])
   session[:dealer_total] = calculate_total(session[:dealer_cards])
   
+  @show_gameplay_buttons = true
+  
   # render template
   erb :game
 end
 
 # player chooses hit
-post '/game/player/hit' do
+post '/game-player-hit' do
   session[:player_cards] << session[:deck].pop
+  session[:player_total] = calculate_total(session[:player_cards])
+  if session[:player_total] > 21
+    @error = "Sorry, it looks like you busted."
+  end
+  @show_gameplay_buttons = true
   erb :game
 end
 
-post '/game/player/stay' do
-  
+post '/game-player-stay' do
+  @success = "You have chosen to stay."
+  erb :game
 end
