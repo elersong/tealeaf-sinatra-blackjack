@@ -71,6 +71,8 @@ end
 
 before do
   @show_gameplay_buttons = false
+  @show_new_game_button = false
+  @show_gameplay_buttons_dealer = false
 end
 
 # ============================================================================== Route Definitions & Game Logic
@@ -90,8 +92,12 @@ end
 
 # process input from form
 post '/new_player' do
-  session[:player_name] = params[:player_name]
-  redirect '/game'
+  if params[:player_name].empty?
+    @error = "You must enter a name."
+    halt erb(:new_player)
+  end
+    session[:player_name] = params[:player_name]
+    redirect '/game'
 end
 
 # begin the game. note that this http request begins a NEW round. 
@@ -122,14 +128,50 @@ end
 post '/game-player-hit' do
   session[:player_cards] << session[:deck].pop
   session[:player_total] = calculate_total(session[:player_cards])
-  if session[:player_total] > 21
-    @error = "Sorry, it looks like you busted."
-  end
+  
+  # by default, show hit/stay buttons during player turn
   @show_gameplay_buttons = true
+  
+  # hide hit/stay button && show new game button after each round
+  if session[:player_total] == 21
+    @success = "Winner! You got BLACKJACK!"
+    @show_gameplay_buttons = false
+    @show_new_game_button = true
+  elsif session[:player_total] > 21
+    @error = "Sorry, it looks like you busted."
+    @show_gameplay_buttons = false
+    @show_new_game_button = true
+  end
+  
   erb :game
 end
 
 post '/game-player-stay' do
   @success = "You have chosen to stay."
+  
+  if session[:dealer_total] <= 17
+    session[:dealer_cards] << session[:deck].pop
+    session[:dealer_total] = calculate_total(session[:dealer_cards])
+    
+    # display the button that reveals the next dealer card
+    @show_gameplay_buttons_dealer = true
+  end
+  
+
+  # hide hit/stay button && show new game button after each round
+  if session[:dealer_total] == 21
+    @success = "Oh no! The dealer got BLACKJACK!"
+    @show_gameplay_buttons_dealer = false
+    @show_new_game_button = true
+  elsif session[:dealer_total] > 21
+    @error = "Yeah! The dealer busted!"
+    @show_gameplay_buttons_dealer = false
+    @show_new_game_button = true
+  end
+  
   erb :game
+end
+
+post '/game' do
+  redirect '/game'
 end

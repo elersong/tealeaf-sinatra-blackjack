@@ -8,6 +8,11 @@
       <img src="images/cards/<%= card_to_image(card) %>">
     <% end %>
   </ul>
+  <% if @show_gameplay_buttons_dealer %>
+    <form id="dealer_show_form" action='/game-player-stay' method='post'>
+      <input type="submit" class="btn btn-primary" value="Show Next Card">
+    </form>
+  <% end %>
   
   <p>Player Cards (<%= session[:player_total] %>)</p>
   <ul class="card-background">
@@ -18,11 +23,19 @@
 </div>
 
 <% if @show_gameplay_buttons %>
-  <form action='/game-player-hit' method='post'>
+  <form id="hit_form" action='/game-player-hit' method='post'>
     <input type="submit" class="btn btn-success" value="Hit">
   </form>
   
-  <form action='/game-player-stay' method='post'>
-    <input type="submit" class="btn btn-danger" value="Stay">
+  <form id="stay_form" action='/game-player-stay' method='post'>
+    <input type="submit" class="btn btn-warning" value="Stay">
+  </form>
+<% elsif @show_new_game_button %>
+  <form id="new_round_form" action='/game' method='post'>
+    <input type='submit' class='btn btn-primary' value="Play Again">
+  </form>
+  
+  <form id="end_game_form" action='/gameover' method='post'>
+    <input type='submit' class='btn btn-danger' value="End Game">
   </form>
 <% end %>
