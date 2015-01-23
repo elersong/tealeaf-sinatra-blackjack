@@ -18,6 +18,9 @@ p {
   margin-left: 20px;
 }
 
+form#dealer_show_form {
+  margin-left: 20px;
+}
 
 form#hit_form, form#stay_form, form#new_round_form,
 form#end_game_form {
