@@ -73,6 +73,7 @@ before do
   @show_gameplay_buttons = false
   @show_new_game_button = false
   @show_gameplay_buttons_dealer = false
+  @show_dealer_score = false
 end
 
 # ============================================================================== Route Definitions & Game Logic
@@ -148,8 +149,10 @@ end
 
 post '/game-player-stay' do
   @success = "You have chosen to stay."
+  @show_dealer_score = true
   
-  if session[:dealer_total] <= 17
+  # keep increasing until either higher than player or 17
+  if session[:dealer_total] <= 17 || session[:dealer_total] < session[:player_total]
     session[:dealer_cards] << session[:deck].pop
     session[:dealer_total] = calculate_total(session[:dealer_cards])
     
@@ -162,10 +165,14 @@ post '/game-player-stay' do
     @success = "Oh no! The dealer got BLACKJACK!"
     @show_gameplay_buttons_dealer = false
     @show_new_game_button = true
+    
   elsif session[:dealer_total] > 21
     @success = "Yeah! The dealer busted!"
     @show_gameplay_buttons_dealer = false
     @show_new_game_button = true
+    
+  elsif session[:dealer_total] > session[:player_total]
+    @show_gameplay_buttons_dealer = false
   end
   
   # when the dealer isn't drawing again, the game is over
@@ -175,16 +182,22 @@ post '/game-player-stay' do
       @success = "Yeah! You win!"
     elsif session[:player_total] < session[:dealer_total] && session[:dealer_total] <= 21
       @error = "Oh no! The dealer wins!"
-    else
+    elsif session[:player_total] == session[:dealer_total]
       @success = "Push. Nobody wins. Nobody loses."
     end
     
     @show_new_game_button = true
   end
   
+  #binding.pry
+  
   erb :game
 end
 
 post '/game' do
   redirect '/game'
+end
+
+post '/gameover' do
+  erb :gameover
 end

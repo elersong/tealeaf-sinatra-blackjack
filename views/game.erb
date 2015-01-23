@@ -2,19 +2,27 @@
 
 <p>Welcome, <%= session[:player_name] %>!</p>
 <div class="row">
-  <p>Dealer Cards (<%= session[:dealer_total] %>)</p>
+  
+  
+  <p>Dealer Cards ( <%= session[:dealer_total] if @show_dealer_score %> )</p>
+  
   <ul class="card-background">
-    <% session[:dealer_cards].each do |card| %>
-      <img src="images/cards/<%= card_to_image(card) %>">
+    <% session[:dealer_cards].each_with_index do |card, index| %>
+      <% unless index == 0 %>
+        <img src="images/cards/<%= card_to_image(card) %>"> 
+      <% end %>
     <% end %>
   </ul>
+  
   <% if @show_gameplay_buttons_dealer %>
     <form id="dealer_show_form" action='/game-player-stay' method='post'>
       <input type="submit" class="btn btn-primary" value="See The Dealer's Decision">
     </form>
   <% end %>
   
-  <p>Player Cards (<%= session[:player_total] %>)</p>
+  
+  
+  <p>Player Cards ( <%= session[:player_total] %> )</p>
   <ul class="card-background">
     <% session[:player_cards].each do |card| %>
       <img src="images/cards/<%= card_to_image(card) %>">
@@ -30,6 +38,7 @@
   <form id="stay_form" action='/game-player-stay' method='post'>
     <input type="submit" class="btn btn-warning" value="Stay">
   </form>
+  
 <% elsif @show_new_game_button %>
   <form id="new_round_form" action='/game' method='post'>
     <input type='submit' class='btn btn-primary' value="Play Again">

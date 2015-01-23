@@ -27,3 +27,7 @@ form#end_game_form {
   float: left;
   margin-right: 5px;
 }
+
+body {
+  background-color: #9fd1ac;
+}
