@@ -11,7 +11,7 @@ ul.card-background img {
 }
 
 p {
-  color: #888;
+  color: #555;
 }
 
 .row p {
@@ -30,4 +30,13 @@ form#end_game_form {
 
 body {
   background-color: #9fd1ac;
+}
+
+a.navbar-brand {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navbar .nav {
+  margin: 0 10px 0 -15px;
 }

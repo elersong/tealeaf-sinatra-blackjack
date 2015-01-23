@@ -11,7 +11,11 @@
       <div class="navbar-inner">
         <div class="container">
             <ul class="nav">
+              <li><a href='#' class="navbar-brand">BlackJack!</a></li>
               <li><a href="/new_player">Start Over</a></li>
+            </ul>
+            <ul class="nav navbar-nav" style="float: right;">
+              <li><p class="navbar-text"><%= session[:player_name] %>  |  $200</p></li>
             </ul>
         </div>
       </div>
