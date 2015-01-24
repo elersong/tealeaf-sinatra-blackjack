@@ -67,6 +67,25 @@ helpers do
     image_name
   end # => String
   
+  def is_number?(str)
+    true if Float(str) rescue false
+  end
+  
+  def issue_winnings
+    session[:wallet] += (2 * session[:player_bet])
+  end
+  
+  def gameover_if_gameover
+    redirect '/gameover' if session[:wallet] <= 0
+  end
+  
+  def final_score
+    if session[:dealer_total] > session[:player_total]
+      "The dealer won the last hand by #{session[:dealer_total] - session[:player_total]} points."
+    else
+      "Your final winnings total $#{session[:wallet]}."
+    end
+  end
 end
 
 before do
@@ -74,6 +93,7 @@ before do
   @show_new_game_button = false
   @show_gameplay_buttons_dealer = false
   @show_dealer_score = false
+  @sign_up_page = false
 end
 
 # ============================================================================== Route Definitions & Game Logic
@@ -88,6 +108,7 @@ end
 
 # display the new user form
 get '/new_player' do
+  @sign_up_page = true
   erb :new_player
 end
 
@@ -98,7 +119,36 @@ post '/new_player' do
     halt erb(:new_player)
   end
     session[:player_name] = params[:player_name]
+    session[:wallet] = 100
+    redirect '/bet'
+end
+
+# play again request from the form
+post '/bet' do
+  redirect '/bet'
+end
+
+# take the player's bet
+get '/bet' do
+  erb :bet
+end
+
+post '/player_bet' do
+  bet = params[:player_bet]
+  
+  if bet.empty? || !is_number?(bet) || bet.to_i < 0
+    session[:player_bet] = 1
+  else
+    session[:player_bet] = bet.to_i
+  end
+  
+  if (session[:wallet] - session[:player_bet]) >= 0
+    session[:wallet] -= session[:player_bet]
     redirect '/game'
+  else
+    @error = "You don't have enough money to make that bet."
+    erb :bet
+  end
 end
 
 # begin the game. note that this http request begins a NEW round. 
@@ -138,10 +188,12 @@ post '/game-player-hit' do
     @success = "Winner! You got BLACKJACK!"
     @show_gameplay_buttons = false
     @show_new_game_button = true
+    issue_winnings
   elsif session[:player_total] > 21
     @error = "Sorry, it looks like you busted."
     @show_gameplay_buttons = false
     @show_new_game_button = true
+    gameover_if_gameover
   end
   
   erb :game
@@ -165,11 +217,13 @@ post '/game-player-stay' do
     @success = "Oh no! The dealer got BLACKJACK!"
     @show_gameplay_buttons_dealer = false
     @show_new_game_button = true
+    gameover_if_gameover
     
   elsif session[:dealer_total] > 21
     @success = "Yeah! The dealer busted!"
     @show_gameplay_buttons_dealer = false
     @show_new_game_button = true
+    issue_winnings
     
   elsif session[:dealer_total] > session[:player_total]
     @show_gameplay_buttons_dealer = false
@@ -180,18 +234,25 @@ post '/game-player-stay' do
     
     if session[:player_total] > session[:dealer_total] && session[:player_total] <= 21
       @success = "Yeah! You win!"
+      issue_winnings
+      
     elsif session[:player_total] < session[:dealer_total] && session[:dealer_total] <= 21
       @error = "Oh no! The dealer wins!"
+      gameover_if_gameover
+      
     elsif session[:player_total] == session[:dealer_total]
       @success = "Push. Nobody wins. Nobody loses."
+      session[:wallet] += session[:player_bet]
     end
     
     @show_new_game_button = true
   end
   
-  #binding.pry
-  
-  erb :game
+  if session[:wallet] <= 0
+    redirect '/gameover'
+  else
+    erb :game
+  end
 end
 
 post '/game' do
@@ -199,5 +260,9 @@ post '/game' do
 end
 
 post '/gameover' do
+  erb :gameover
+end
+
+get '/gameover' do
   erb :gameover
 end

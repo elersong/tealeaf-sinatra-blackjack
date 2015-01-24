@@ -14,9 +14,11 @@
               <li><a href='#' class="navbar-brand">BlackJack!</a></li>
               <li><a href="/new_player">Start Over</a></li>
             </ul>
-            <ul class="nav navbar-nav" style="float: right;">
-              <li><p class="navbar-text"><%= session[:player_name] %>  |  $200</p></li>
-            </ul>
+            <% unless @sign_up_page %>
+              <ul class="nav navbar-nav" style="float: right;">
+                <li><p class="navbar-text"><%= session[:player_name] %>  |  $<%= session[:wallet] %></p></li>
+              </ul>
+            <% end %>
         </div>
       </div>
     </div>
